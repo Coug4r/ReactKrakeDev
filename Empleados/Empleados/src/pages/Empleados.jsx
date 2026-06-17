@@ -1,10 +1,15 @@
-function Empleados({ empleados, onEliminar, onEditar }) {
+import { useNavigate } from "react-router-dom"
+
+function Empleados({ empleados, onEliminar}) {
+const navigate = useNavigate()
+function manejarEditar(emp){
+  navigate('/editar',{state:{empleado: emp}});
+
+}
+
   return (
     <div>
-      <div>
-        <h2>Empleados</h2>
-        <p>Registros</p>
-      </div>
+      <div></div>
       <div style={{ overflowX: "auto" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
@@ -30,8 +35,8 @@ function Empleados({ empleados, onEliminar, onEditar }) {
                 <td>{emp.fecha_ingreso}</td>
                 <td>{emp.salario}</td>
                 <td>
-                  <button onClick={() => onEditar(emp)}>Editar</button>
-                  <button onClick={() => onEliminar(emp)}>Eliminar</button>
+                  <button onClick={()=>manejarEditar(emp)}>Editar</button>
+                  <button onClick={() => onEliminar(emp.id)}>Eliminar</button>
                 </td>
               </tr>
             ))}
