@@ -20,6 +20,7 @@ function Videojuegos({ juegos, onEliminar }) {
               <th>Precio</th>
               <th>Disponible</th>
               <th>Progreso</th>
+              <th>Sinopsis</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -35,6 +36,7 @@ function Videojuegos({ juegos, onEliminar }) {
                 <td>
                   <BarraDeProgreso progreso={juego.progreso}></BarraDeProgreso>
                 </td>
+                <td>{juego.sinopsis}</td> 
                 <td>
                   <button onClick={() => manejarEditar(juego)}>Editar</button>
                   <button onClick={() => onEliminar(juego.id)}>Eliminar</button>

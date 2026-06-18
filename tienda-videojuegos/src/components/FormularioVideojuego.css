@@ -1,84 +1,99 @@
+/* --- Mensajes de error debajo de inputs --- */
+.error-mensaje {
+  color: #ff004c;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: block;
+  text-shadow: 1px 1px #000;
+  opacity: 0;
+  animation: aparecer 0.3s forwards;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Formulario contenedor --- */
 .formulario-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-  background: radial-gradient(circle at top, #0f0f1a, #1a1a2e);
   padding: 2rem;
+  background: radial-gradient(circle at top, #0f0f1a, #1a1a2e);
   border-radius: 15px;
   box-shadow: 0 0 20px #00ff99;
+  color: #f1f1f1;
+  font-family: 'Press Start 2P', cursive;
 }
 
 .formulario-container h2 {
+  text-align: center;
   color: #00ff99;
-  font-family: 'Press Start 2P', cursive;
   margin-bottom: 1.5rem;
   text-shadow: 2px 2px #000;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  background: #1a1a2e;
-  padding: 2rem;
-  border-radius: 10px;
-  border: 2px solid #00ff99;
-  max-width: 500px;
+/* --- Inputs, selects y textarea --- */
+.formulario-container input,
+.formulario-container select,
+.formulario-container textarea {
   width: 100%;
-  font-family: 'Press Start 2P', cursive;
-  color: #f1f1f1;
-}
-
-form label {
-  font-size: 0.9rem;
-  color: #00ff99;
-}
-
-form input,
-form select {
-  padding: 0.5rem;
+  padding: 0.6rem;
+  margin: 0.5rem 0;
   border: 2px solid #00ff99;
-  border-radius: 5px;
-  background: #0f0f1a;
-  color: #fff;
+  border-radius: 8px;
+  background: #1a1a2e;
+  color: #f1f1f1;
   font-family: inherit;
+  transition: all 0.3s ease;
 }
 
-form input[type="checkbox"] {
-  width: auto;
-  margin-left: 0.5rem;
+.formulario-container input:focus,
+.formulario-container select:focus,
+.formulario-container textarea:focus {
+  border-color: #ff004c;
+  box-shadow: 0 0 10px #ff004c;
+  outline: none;
 }
 
-form input[type="range"] {
-  accent-color: #00ff99;
-}
-
-form button {
-  padding: 0.7rem 1rem;
+/* --- Botones del formulario --- */
+.formulario-container button {
+  padding: 0.6rem 1.2rem;
+  margin: 0.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-family: inherit;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
 
-form button:first-of-type {
+.formulario-container button:first-of-type {
   background: #00ff99;
   color: #0f0f1a;
 }
 
-form button:first-of-type:hover {
+.formulario-container button:first-of-type:hover {
   box-shadow: 0 0 10px #00ff99;
 }
 
-form button:last-of-type {
+.formulario-container button:last-of-type {
   background: #ff004c;
   color: #fff;
 }
 
-form button:last-of-type:hover {
+.formulario-container button:last-of-type:hover {
   box-shadow: 0 0 10px #ff004c;
+}
+
+/* --- Toast de éxito --- */
+.alerta-notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 255, 153, 0.85);
+  color: #0f0f1a;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: 0 0 15px #00ff99;
+  animation: aparecer 0.3s forwards;
 }

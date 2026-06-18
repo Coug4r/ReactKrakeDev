@@ -2,68 +2,79 @@ import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import "./FormularioVideojuego.css"
 function FormularioVideoJuego({ onGuardar }) {
-    const location = useLocation()
-    const navigate = useNavigate()
-    const videojuegoRecuperado = location.state?.videojuego || null
+  const location = useLocation()
+  const navigate = useNavigate()
+  const videojuegoRecuperado = location.state?.videojuego || null
 
-    const [titulo, setTitulo] = useState("")
-    const [disponible, setDisponible] = useState(false)
-    const [progreso, setProgreso] = useState(0)
-    const [lanzamiento, setLanzamiento] = useState("")
-    const [genero, setGenero] = useState("")
-    const [plataforma, setPlataforma] = useState("")
-    const [precio, setPrecio] = useState(0)
+  const [titulo, setTitulo] = useState("")
+  const [disponible, setDisponible] = useState(false)
+  const [progreso, setProgreso] = useState(0)
+  const [lanzamiento, setLanzamiento] = useState("")
+  const [genero, setGenero] = useState("")
+  const [plataforma, setPlataforma] = useState("")
+  const [precio, setPrecio] = useState(0)
+  const [sinopsis, setSinopsis] = useState("")
+  const [calificacion, setCalificacion] = useState("")
+  const [errores, setErrores] = useState({})
 
-    useEffect(() => {
-        if (videojuegoRecuperado) {
-            setTitulo(videojuegoRecuperado.titulo || "")
-            setGenero(videojuegoRecuperado.genero || "")
-            setPlataforma(videojuegoRecuperado.plataforma || "")
-            setLanzamiento(videojuegoRecuperado.lanzamiento || "")
-            setPrecio(videojuegoRecuperado.precio ?? 0)
-            setDisponible(videojuegoRecuperado.disponible ?? false)
-            setProgreso(videojuegoRecuperado.progreso ?? 0)
+  useEffect(() => {
+    if (videojuegoRecuperado) {
+      setTitulo(videojuegoRecuperado.titulo || "")
+      setGenero(videojuegoRecuperado.genero || "")
+      setPlataforma(videojuegoRecuperado.plataforma || "")
+      setLanzamiento(videojuegoRecuperado.lanzamiento || "")
+      setPrecio(videojuegoRecuperado.precio ?? 0)
+      setDisponible(videojuegoRecuperado.disponible ?? false)
+      setProgreso(videojuegoRecuperado.progreso ?? 0)
+      setSinopsis(videojuegoRecuperado.sinopsis || "")
+      setCalificacion(videojuegoRecuperado.calificacion || "")
+    }
+  }, [videojuegoRecuperado])
 
-        } else {
-            setTitulo("")
-            setGenero("")
-            setPlataforma("")
-            setLanzamiento("")
-            setPrecio(0)
-            setDisponible(false)
-            setProgreso(0)
-        }
-    }, [videojuegoRecuperado])
+  function validarFormulario() {
+    const erroresActivos = {}
+    if (!titulo.trim()) erroresActivos.titulo = "El título no puede estar vacío."
+    if (sinopsis.length < 10 || sinopsis.length > 250) erroresActivos.sinopsis = "La sinopsis debe tener entre 10 y 250 caracteres."
+    if (calificacion < 1 || calificacion > 100) erroresActivos.calificacion = "La calificación debe estar entre 1 y 100."
+    if (lanzamiento && new Date(lanzamiento) > new Date()) erroresActivos.lanzamiento = "La fecha no puede ser futura."
+    return erroresActivos
+  }
 
-    function ManejarGuardar() {
-        const videojuego = {
-            id: videojuegoRecuperado ? videojuegoRecuperado.id : Date.now(),
-            titulo,
-            genero,
-            plataforma,
-            lanzamiento,
-            precio,
-            disponible,
-            progreso
-        }
-        onGuardar(videojuego)
-        navigate("/")
+  function ManejarGuardar(e) {
+    e.preventDefault()
+    const erroresActivos = validarFormulario()
+    if (Object.keys(erroresActivos).length > 0) {
+      setErrores(erroresActivos)
+      return
     }
 
-    function ManejarCancelar() {
-        navigate("/")
+    const videojuego = {
+      id: videojuegoRecuperado ? videojuegoRecuperado.id : Date.now(),
+      titulo,
+      genero,
+      plataforma,
+      lanzamiento,
+      precio,
+      disponible,
+      progreso,
+      sinopsis,
+      calificacion
     }
+    onGuardar(videojuego)
+    navigate("/")
+  }
 
-    return (
-        <div className="formulario-container">
+  function ManejarCancelar() {
+    navigate("/")
+  }
+
+  return (
+    <div className="formulario-container">
       <h2>{videojuegoRecuperado ? "Editar" : "Agregar"} Videojuego</h2>
       <form>
         <label>Título:</label>
-        <input
-          type="text"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-        />
+        <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+        {errores.titulo && <span className="error-mensaje">{errores.titulo}</span>}
 
         <label>Género:</label>
         <select value={genero} onChange={(e) => setGenero(e.target.value)}>
@@ -84,44 +95,33 @@ function FormularioVideoJuego({ onGuardar }) {
         </select>
 
         <label>Fecha de Lanzamiento:</label>
-        <input
-          type="date"
-          value={lanzamiento}
-          onChange={(e) => setLanzamiento(e.target.value)}
-        />
+        <input type="date" value={lanzamiento} onChange={(e) => setLanzamiento(e.target.value)} />
+        {errores.lanzamiento && <span className="error-mensaje">{errores.lanzamiento}</span>}
 
         <label>Precio:</label>
-        <input
-          type="number"
-          step="0.01"
-          min="0"
-          value={precio}
-          onChange={(e) => setPrecio(parseFloat(e.target.value))}
-        />
+        <input type="number" step="0.01" min="0" value={precio} onChange={(e) => setPrecio(parseFloat(e.target.value))} />
+
+        <label>Sinopsis:</label>
+        <textarea value={sinopsis} onChange={(e) => setSinopsis(e.target.value)}></textarea>
+        {errores.sinopsis && <span className="error-mensaje">{errores.sinopsis}</span>}
+
+        <label>Calificación:</label>
+        <input type="number" value={calificacion} onChange={(e) => setCalificacion(parseInt(e.target.value))} />
+        {errores.calificacion && <span className="error-mensaje">{errores.calificacion}</span>}
 
         <label>
           Disponible:
-          <input
-            type="checkbox"
-            checked={disponible}
-            onChange={(e) => setDisponible(e.target.checked)}
-          />
+          <input type="checkbox" checked={disponible} onChange={(e) => setDisponible(e.target.checked)} />
         </label>
 
         <label>Progreso:</label>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={progreso}
-          onChange={(e) => setProgreso(parseInt(e.target.value))}
-        />
+        <input type="range" min="0" max="100" value={progreso} onChange={(e) => setProgreso(parseInt(e.target.value))} />
         <span>{progreso}%</span>
 
-        <button type="button" onClick={ManejarGuardar}>Guardar</button>
+        <button type="submit" onClick={ManejarGuardar}>Guardar</button>
         <button type="button" onClick={ManejarCancelar}>Cancelar</button>
       </form>
     </div>
-    )
+  )
 }
 export default FormularioVideoJuego
