@@ -1,6 +1,11 @@
+import { useNavigate } from "react-router-dom"
 import BarraDeProgreso from "./BarraDeProgreso"
 import "./TablaVideojuegos.css"
-function Videojuegos({ juegos, onEditar, onEliminar }) {
+function Videojuegos({ juegos, onEliminar }) {
+  const navigate = useNavigate()
+  function manejarEditar(vid){
+    navigate('/editar',{state:{videojuego: vid}})
+  }
   return (
     <div className="videojuegos-container">
       <h2>Catálogo de Videojuegos</h2>
@@ -31,8 +36,8 @@ function Videojuegos({ juegos, onEditar, onEliminar }) {
                   <BarraDeProgreso progreso={juego.progreso}></BarraDeProgreso>
                 </td>
                 <td>
-                  <button onClick={() => onEditar(juego)}>Editar</button>
-                  <button onClick={() => onEliminar(juego)}>Eliminar</button>
+                  <button onClick={() => manejarEditar(juego)}>Editar</button>
+                  <button onClick={() => onEliminar(juego.id)}>Eliminar</button>
                 </td>
               </tr>
             ))}

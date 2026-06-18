@@ -1,31 +1,79 @@
 import { useState } from "react"
 import TablaVideojuegos from "./components/TablaVideojuegos"
 import data from "./data/videojuegos"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import FormularioVideojuego from "./components/FormularioVideojuego"
+import NavBar from "./components/Navbar"
+import NotFound from "./components/NotFound"
 
 function App() {
   // Estado inicial con los videojuegos
   const [juegos, setJuegos] = useState(data)
 
-  // Función para editar
-  const onEditar = (juego) => {
-    console.log("Editar videojuego:", juego)
-    // Aquí podrías abrir un formulario modal para editar
+  function agregarJuego(nuevoJuego) {
+    setJuegos([...juegos, nuevoJuego])
   }
 
-  // Función para eliminar
-  const onEliminar = (juego) => {
-    console.log("Eliminar videojuego:", juego)
-    setJuegos(juegos.filter((j) => j.id !== juego.id))
+  function eliminarJuego(id) {
+    const filtrados = juegos.filter((juego) => juego.id !== id)
+    setJuegos(filtrados)
+  }
+
+  function editarJuego(juegoEditado) {
+    const actualizados = juegos.map((juego) => {
+      if (juego.id === juegoEditado.id) {
+        return juegoEditado
+      } else {
+        return juego
+      }
+    })
+    setJuegos(actualizados)
+  }
+
+  function manejarGuardar(juego) {
+    const existe = juegos.find((j) => j.id === juego.id)
+    if (existe) {
+      editarJuego(juego)
+    } else {
+      agregarJuego(juego)
+    }
   }
 
   return (
-    <div>
-      <TablaVideojuegos
-        juegos={juegos}
-        onEditar={onEditar}
-        onEliminar={onEliminar}
-      />
-    </div>
+    <BrowserRouter>
+      <NavBar />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <TablaVideojuegos
+              juegos={juegos}
+              onEliminar={eliminarJuego}  
+            />
+          }  
+        />
+        <Route
+          path="/nuevo"
+          element={
+            <FormularioVideojuego
+              onGuardar={manejarGuardar}
+            />
+          }
+        />
+        <Route
+          path="/editar"
+          element={
+            <FormularioVideojuego
+              onGuardar={manejarGuardar}
+            />
+          }
+        />
+        <Route
+          path="*"
+          element={<NotFound />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
