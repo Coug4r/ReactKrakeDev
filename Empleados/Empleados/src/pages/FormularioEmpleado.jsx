@@ -10,9 +10,9 @@ function FormularioEmpleado({ onGuardar }) {
   const [nombre, setNombre] = useState("")
   const [edad, setEdad] = useState(0)
   const [departamento, setDepartamento] = useState("")
-  const [Turno, setTurno] = useState("")          // 👈 usa la misma propiedad que la tabla
-  const [Activo, setActivo] = useState(false)     // 👈 usa la misma propiedad que la tabla
-  const [fecha_ingreso, setFechaIngreso] = useState("") // 👈 usa la misma propiedad que la tabla
+  const [Turno, setTurno] = useState("")          
+  const [Activo, setActivo] = useState(false)     
+  const [fecha_ingreso, setFechaIngreso] = useState("") 
   const [salario, setSalario] = useState(0)
 
   useEffect(() => {
@@ -41,9 +41,9 @@ function FormularioEmpleado({ onGuardar }) {
       nombre,
       edad: Number(edad),
       departamento,
-      Turno,          // 👈 coincide con la tabla
-      Activo,         // 👈 coincide con la tabla
-      fecha_ingreso,  // 👈 coincide con la tabla
+      Turno,          
+      Activo,         
+      fecha_ingreso,  
       salario: Number(salario),
     }
     onGuardar(empleado)

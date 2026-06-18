@@ -5,6 +5,7 @@ import FormularioEmpleado from './pages/FormularioEmpleado'
 import Navbar from './components/Navbar'
 import Empleados from './pages/Empleados'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import NotFound from './pages/NoEncontrado'
 
 function App() {
   const [empleados, setEmpleados] = useState(data)
@@ -63,6 +64,12 @@ function App() {
           <FormularioEmpleado
             onGuardar={manejarGuardar}
           />
+        }
+      />
+      <Route
+        path='*'
+        element={
+          <NotFound/> 
         }
       />
     </Routes>
