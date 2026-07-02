@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import "./FormularioVideojuego.css"
+
 function FormularioVideoJuego({ onGuardar }) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -124,4 +125,5 @@ function FormularioVideoJuego({ onGuardar }) {
     </div>
   )
 }
+
 export default FormularioVideoJuego

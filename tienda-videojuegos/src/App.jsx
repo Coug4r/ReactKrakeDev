@@ -1,65 +1,53 @@
-import { useState, useEffect } from "react"
-import TablaVideojuegos from "./components/TablaVideojuegos"
-import data from "./data/videojuegos"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import FormularioVideojuego from "./components/FormularioVideojuego"
-import NavBar from "./components/Navbar"
+import React, { useState, useEffect } from "react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import FormularioVideoJuego from "./components/FormularioVideoJuego"
+import Videojuegos from "./components/TablaVideojuegos"
+import NavBar from "./components/NavBar"
 import NotFound from "./components/NotFound"
 import AlertaNotificacion from "./components/AlertaNotificacion"
 
 function App() {
-  const [juegos, setJuegos] = useState(() => {
-  const datosGuardados = localStorage.getItem("lista_videojuegos")
-  if (datosGuardados) {
-    const parsed = JSON.parse(datosGuardados)
-    // Si falta sinopsis, usa el dataset original
-    return parsed.every(j => j.sinopsis) ? parsed : data
-  }
-  return data
+  const [videojuegos, setVideojuegos] = useState(() => {
+    const datosGuardados = localStorage.getItem("lista_videojuegos")
+    return datosGuardados ? JSON.parse(datosGuardados) : []
   })
-  const [mensaje, setMensaje] = useState("")
+
+  const [mensajeToast, setMensajeToast] = useState("")
 
   useEffect(() => {
-    localStorage.setItem("lista_videojuegos", JSON.stringify(juegos))
-  }, [juegos])
+    localStorage.setItem("lista_videojuegos", JSON.stringify(videojuegos))
+  }, [videojuegos])
 
-  function agregarJuego(nuevoJuego) {
-    setJuegos([...juegos, nuevoJuego])
-    setMensaje("Juego agregado con éxito")
-  }
-
-  function eliminarJuego(id) {
-    const filtrados = juegos.filter((juego) => juego.id !== id)
-    setJuegos(filtrados)
-    setMensaje("Juego eliminado con éxito")
-  }
-
-  function editarJuego(juegoEditado) {
-    const actualizados = juegos.map((juego) => juego.id === juegoEditado.id ? juegoEditado : juego)
-    setJuegos(actualizados)
-    setMensaje("Juego editado con éxito")
-  }
-
-  function manejarGuardar(juego) {
-    const existe = juegos.find((j) => j.id === juego.id)
+  function manejarGuardar(videojuego) {
+    const existe = videojuegos.find(v => v.id === videojuego.id)
     if (existe) {
-      editarJuego(juego)
+      setVideojuegos(videojuegos.map(v => v.id === videojuego.id ? videojuego : v))
+      setMensajeToast("Videojuego editado con éxito ✅")
     } else {
-      agregarJuego(juego)
+      setVideojuegos([...videojuegos, videojuego])
+      setMensajeToast("Videojuego agregado con éxito 🎮")
     }
   }
 
+  function manejarEliminar(id) {
+    setVideojuegos(videojuegos.filter(v => v.id !== id))
+    setMensajeToast("Videojuego eliminado con éxito 🗑️")
+  }
+
   return (
-    <BrowserRouter>
+    <Router>
       <NavBar />
-      {mensaje && <AlertaNotificacion mensaje={mensaje} onClose={() => setMensaje("")} />}
+      {mensajeToast && (
+        <AlertaNotificacion mensaje={mensajeToast} onClose={() => setMensajeToast("")} />
+      )}
       <Routes>
-        <Route path="/" element={<TablaVideojuegos juegos={juegos} onEliminar={eliminarJuego} />} />
-        <Route path="/nuevo" element={<FormularioVideojuego onGuardar={manejarGuardar} />} />
-        <Route path="/editar" element={<FormularioVideojuego onGuardar={manejarGuardar} />} />
+        <Route path="/" element={<Videojuegos juegos={videojuegos} onEliminar={manejarEliminar} />} />
+        <Route path="/nuevo" element={<FormularioVideoJuego onGuardar={manejarGuardar} />} />
+        <Route path="/editar" element={<FormularioVideoJuego onGuardar={manejarGuardar} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   )
 }
+
 export default App

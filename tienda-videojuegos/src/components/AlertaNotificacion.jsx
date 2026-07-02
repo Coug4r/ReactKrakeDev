@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+import "./AlertaNotificacion.css"
 
 function AlertaNotificacion({ mensaje, onClose }) {
   useEffect(() => {
